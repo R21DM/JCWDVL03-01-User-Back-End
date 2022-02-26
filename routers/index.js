@@ -1,5 +1,3 @@
-const registerRouters = require("./registerRouters");
+const router = require("./registerRouters");
 
-module.exports = {
-  registerRouters,
-};
+module.exports = router
