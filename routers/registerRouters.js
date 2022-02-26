@@ -1,9 +1,8 @@
 const express = require("express");
 const { registerController } = require("../controllers");
-const routers = express.Router();
+const registerRouter = express.Router();
 
-routers.get("/", registerController.getData);
-routers.post("/", registerController.postData);
-routers.get("/send", registerController.sendEmail);
+registerRouter.get("/", registerController.getData);
+registerRouter.post("/", registerController.postData);
 
-module.exports = routers;
+module.exports = registerRouter;
