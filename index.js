@@ -4,7 +4,7 @@ const app = express();
 const server = http.createServer(app);
 const cors = require("cors");
 const db = require("./database");
-const router = require("./routers");
+const registerRouter = require("./routers");
 
 const PORT = 8000;
 
@@ -19,7 +19,7 @@ db.connect((error) => {
   console.log("Connected at thread id", db.threadId);
 });
 
-app.use("/register", router);
+app.use("/", registerRouter);
 
 //Start Server
 server.listen(PORT, () => {
