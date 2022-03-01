@@ -4,9 +4,12 @@ const app = express();
 const server = http.createServer(app);
 const cors = require("cors");
 const db = require("./database");
-const registerRouter = require("./routers");
+const { userRouters, productRouters,  registerRouter} = require("./routers");
 
 const PORT = 8000;
+
+// Function to serve all static files inside public directory.
+app.use("/products", express.static("public"));
 
 //Initialize & Setting Express
 app.use(express.json());
@@ -20,6 +23,8 @@ db.connect((error) => {
 });
 
 app.use("/", registerRouter);
+app.use("/users", userRouters);
+app.use("/products", productRouters);
 
 //Start Server
 server.listen(PORT, () => {
