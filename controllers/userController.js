@@ -1,4 +1,4 @@
-const { db } = require("../database");
+const db = require("../database");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
