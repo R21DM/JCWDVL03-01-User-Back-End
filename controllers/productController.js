@@ -6,12 +6,21 @@ module.exports = {
     // Query tidak ditampilkan di sini.
     // Buat seperti: userService.addUser(userData) yang diambil dari userServices
 
+    // Product variables
+    const ID = req.query.id;
+
     let scriptQuery = `SELECT * FROM product`;
 
     if (req.query.name) {
       scriptQuery = `SELECT * FROM product where name like ${db.escape(
         req.query.name
       )}`;
+    }
+
+    //Get product detail data
+    if (ID) {
+      scriptQuery = `SELECT * FROM product WHERE id=${ID}`;
+      console.log(scriptQuery);
     }
 
     db.query(scriptQuery, (err, results) => {
