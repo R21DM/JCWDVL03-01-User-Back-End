@@ -4,7 +4,12 @@ const app = express();
 const server = http.createServer(app);
 const cors = require("cors");
 const db = require("./database");
-const { userRouters, productRouters,  registerRouter} = require("./routers");
+const {
+  userRouters,
+  productRouters,
+  registerRouter,
+  cartRouters,
+} = require("./routers");
 
 const PORT = 8000;
 
@@ -25,6 +30,7 @@ db.connect((error) => {
 app.use("/", registerRouter);
 app.use("/users", userRouters);
 app.use("/products", productRouters);
+app.use("/cart", cartRouters);
 
 //Start Server
 server.listen(PORT, () => {
