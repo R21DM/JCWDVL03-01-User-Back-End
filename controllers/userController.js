@@ -8,16 +8,7 @@ module.exports = {
     // Query tidak ditampilkan di sini.
     // Buat seperti: userService.addUser(userData) yang diambil dari userServices
 
-    // if (req.query.email) {
-    //   userQuery = `SELECT * FROM user where email = ${db.escape(
-    //     req.query.email
-    //   )}`;
-    // }
-
-    // if (!req.query.username) res.status(500).send("error");
-    // if (!req.query.password) res.status(500).send("error");
-
-    var userQuery = "";
+    let userQuery = "";
     var stored_hash = "";
 
     if (req.body.password) {
@@ -81,6 +72,23 @@ module.exports = {
         });
       }
     }
+  },
+
+  getEmail: (req, res) => {
+    // Entah kenapa harus pakai DNS
+    // Entah kenapa harus pakai DNS
+    // Entah kenapa harus pakai DNS
+    // Entah kenapa harus pakai DNS
+    // Entah kenapa harus pakai DNS
+
+    let userQuery = `SELECT * FROM user where email = ${db.escape(
+      req.query.email
+    )}`;
+    db.query(userQuery, (err, results) => {
+      console.log(results);
+      if (err) res.status(500).send(err);
+      res.status(200).send(results);
+    });
   },
 
   addData: (req, res) => {
@@ -153,7 +161,7 @@ module.exports = {
       if (!respond) return res.status(500).send(err);
 
       let mailOption = {
-        from: process.env.EMAIL,
+        from: `"Admin"${process.env.EMAIL}`,
         to: respond.email,
         subject: "Forgot Password",
         text: `Your username: ${respond.username},Your password: ${respond.password}`,
