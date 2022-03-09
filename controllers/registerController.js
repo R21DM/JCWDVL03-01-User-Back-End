@@ -45,8 +45,7 @@ const postData = (req, res) => {
     {
       data: "Token Data",
     },
-    RANDOM.toString(),
-    { expiresIn: "10m" }
+    RANDOM.toString()
   );
 
   const QUERY =

@@ -17,3 +17,12 @@ db.getConnection((err, connection) => {
 });
 
 module.exports = db;
+
+// const connection = mysql.createConnection({
+//   host: "localhost",
+//   user: "test",
+//   password: "test",
+//   database: "db_pharmacy",
+// });
+
+// module.exports = connection;

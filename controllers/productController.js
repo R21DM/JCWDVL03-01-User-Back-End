@@ -9,6 +9,8 @@ module.exports = {
     let scriptQuery = `SELECT * FROM product`;
 
     // Search product name
+    // Product variables
+    const ID = req.query.id;
 
     if (req.query.name) {
       scriptQuery = `SELECT * FROM product where name like ${db.escape(
@@ -81,12 +83,17 @@ module.exports = {
           )} AND type like ${db.escape(req.query.type)}`;
         }
       }
-    }
 
-    db.query(scriptQuery, (err, results) => {
-      if (err) res.status(500).send(err);
-      res.status(200).send(results);
-    });
+      //Get product detail data
+      if (ID) {
+        scriptQuery = `SELECT * FROM product WHERE id=${ID}`;
+        console.log(scriptQuery);
+      }
+      db.query(scriptQuery, (err, results) => {
+        if (err) res.status(500).send(err);
+        res.status(200).send(results);
+      });
+    }
   },
   addData: (req, res) => {
     console.log(req.body);
