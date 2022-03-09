@@ -1,8 +1,8 @@
 const express = require("express");
 const cors = require("cors");
-const http = require("http");
-const server = http.createServer(app);
-const db = require("./database");
+// const http = require("http");
+// const server = http.createServer(app);
+// const db = require("./database");
 //PORT
 const PORT = process.env.PORT || 2000;
 // const PORT = 8000;
