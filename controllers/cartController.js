@@ -7,19 +7,21 @@ const userCart = (req, res) => {
   const QUERY = `SELECT * FROM db_pharmacy.cart INNER JOIN db_pharmacy.product ON cart.product_id = product.id WHERE user_id=${ID};`;
 
   db.query(QUERY, (err, result) => {
+    let totalPrice = 0;
     console.log(QUERY);
 
     //Calculate total price in cart
-    const totalPrice = result
-      .map((val) => {
-        return val.total_price;
-      })
-      .reduce((a, b) => {
-        return a + b;
-      });
+    if (result.length) {
+      totalPrice = result
+        .map((val) => {
+          return val.total_price;
+        })
+        .reduce((a, b) => {
+          return a + b;
+        });
+    }
     console.log("Total: ", totalPrice);
-
-    res.status(200).send({ result, totalPrice });
+    return res.status(200).send({ result, totalPrice });
   });
 };
 
