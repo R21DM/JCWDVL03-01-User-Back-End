@@ -64,4 +64,16 @@ const updateCart = (req, res) => {
   });
 };
 
-module.exports = { addToCart, userCart, deleteCart, updateCart };
+//DELETE all cart data in user
+const deleteAllCart = (req, res) => {
+  const ID = req.query.id;
+  const QUERY = `DELETE FROM db_pharmacy.cart WHERE user_id = ${ID};`;
+
+  console.log(QUERY);
+
+  db.query(QUERY, (err, result) => {
+    res.status(200).send(result);
+  });
+};
+
+module.exports = { addToCart, userCart, deleteCart, updateCart, deleteAllCart };
