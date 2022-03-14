@@ -73,7 +73,7 @@ const postData = (req, res) => {
       Thanks`, // plain text body
     html: `<h2>Hi there ${USERNAME}!</h2>
       <p>You have recently visited our website and entered your email.</p>
-      <p>Please click the following link to verify your email http://localhost:3000/verify?username=${USERNAME}&token=${TOKEN}</p>
+      <p>Please click the following <a href=http://localhost:3000/verify?username=${USERNAME}&token=${TOKEN}>link</a> to verify your email.</p>
       <p>Thanks</p>`, // html body
   });
 
