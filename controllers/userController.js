@@ -8,70 +8,51 @@ module.exports = {
     // Query tidak ditampilkan di sini.
     // Buat seperti: userService.addUser(userData) yang diambil dari userServices
 
-    let userQuery = "";
-    var stored_hash = "";
-
-    if (req.body.password) {
-      var reqPassword = req.body.password;
+    if (!req.body.username) {
+      return res.status(500).send("Username is required");
     }
-    if (req.body.username) {
-      var usernameError = "false";
-      let hash = `SELECT * FROM user where username = ${db.escape(
-        req.body.username
-      )}`;
 
-      db.query(hash, async (err, results) => {
-        if (!results) return res.status(500).send(err);
-        if (err) return res.status(500).send(err);
+    var reqPassword = req.body.password;
+    if (!reqPassword) {
+      return res.status(500).send("Password is required");
+    }
 
-        if (reqPassword === undefined) {
-          return res.status(500).send(err);
-        }
+    let queryUsername = `SELECT * FROM user where username = ${db.escape(
+      req.body.username
+    )}`;
 
-        stored_hash = results[0].password;
-        console.log("password:", reqPassword);
-        console.log("stored_hash:", stored_hash);
+    db.query(queryUsername, async (err, results) => {
+      if (err) return res.status(500).send(err);
+      if (results.length !== 1) return res.status(500).send("User not found");
+      let user = results[0];
+      if (user.verified_user === 0)
+        return res.status(500).send("User have not verified");
 
-        const SALT = bcrypt.genSaltSync(10);
-        const hashed_password = bcrypt.hashSync(reqPassword, SALT);
+      let stored_hash = user.password;
+      console.log("password:", reqPassword);
+      console.log("stored_hash:", stored_hash);
 
-        console.log("hashed_password:", hashed_password);
+      if (stored_hash.length < 15) {
+        // untuk pass yang belum hash
 
+        if (stored_hash == reqPassword) {
+          console.log("true");
+          return res.status(200).send(user);
+        } else res.status(500).send("Username and Password doesn't match");
+      } else {
         if (await bcrypt.compare(reqPassword, stored_hash)) {
           console.log("true");
-          userQuery = `SELECT * FROM user where username = ${db.escape(
-            req.body.username
-          )}`;
-          db.query(userQuery, (err, results) => {
-            console.log(results);
-            if (err) res.status(500).send(err);
-            res.status(200).send(results);
-          });
+          // create JWT token -> return ke frontend
+          // kalau bisa ada time-out
+          console.log(results);
+          res.status(200).send(user);
+          return;
         } else {
-          if (req.body.password === req.body.username) {
-            userQuery = `SELECT * FROM user where username = ${db.escape(
-              req.body.username
-            )}`;
-            db.query(userQuery, (err, results) => {
-              console.log(results);
-              res.status(200).send(results);
-              if (err) res.status(500).send(err);
-            });
-          } else {
-            console.log("false");
-            return res.status(500).send(err);
-          }
+          res.status(500).send("Username and Password doesn't match");
+          return;
         }
-
-        if (!stored_hash) return res.status(500).send(err);
-      });
-    } else {
-      if (usernameError === undefined) {
-        return db.query(userQuery, (err, results) => {
-          res.status(500).send(err);
-        });
       }
-    }
+    });
   },
 
   getEmail: (req, res) => {
