@@ -17,13 +17,24 @@ const postInvoice = (req, res) => {
 
   db.query(QUERY, (err, result) => {
     //POST Invoice Detail
-    let QUERY = `INSERT INTO db_pharmacy.invoice_user_detail (\`product_id\`, \`invoice_id\`, \`price\`, \`qty\`) SELECT product_id, invoice_user_header.id, price, qty FROM db_pharmacy.cart INNER JOIN db_pharmacy.product ON cart.product_id = product.id INNER JOIN db_pharmacy.invoice_user_header WHERE (cart.user_id=${USERID} AND invoice_user_header.id = (SELECT MAX(id) FROM invoice_user_header WHERE user_id = cart.user_id));`;
+    if (res.status(200)) {
+      let QUERY = `INSERT INTO db_pharmacy.invoice_user_detail (\`product_id\`, \`invoice_id\`, \`price\`, \`qty\`) SELECT product_id, invoice_user_header.id, price, qty FROM db_pharmacy.cart INNER JOIN db_pharmacy.product ON cart.product_id = product.id INNER JOIN db_pharmacy.invoice_user_header WHERE (cart.user_id=${USERID} AND invoice_user_header.id = (SELECT MAX(id) FROM invoice_user_header WHERE user_id = cart.user_id));`;
 
-    console.log(QUERY);
+      console.log(QUERY);
 
-    db.query(QUERY, (err, result) => {
-      res.status(200).send(result);
-    });
+      db.query(QUERY, (err, result) => {
+        //DELETE Cart Items
+        if (res.status(200)) {
+          let QUERY = `DELETE FROM db_pharmacy.cart WHERE user_id = ${USERID};`;
+
+          console.log(QUERY);
+
+          db.query(QUERY, (err, result) => {
+            res.status(200).send("Invoice processed");
+          });
+        } else return err;
+      });
+    } else return err;
   });
 };
 
