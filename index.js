@@ -13,17 +13,19 @@ const PORT = process.env.PORT || 2000;
 //Multer configuration
 const multerStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./public/paymentProof");
+    cb(null, "./public");
   },
   filename: (req, file, cb) => {
-    const ext = file.mimetype.split("/")[1];
-    cb(null, `paymentProof-${Date.now()}.${ext}`);
+    cb(null, `${req.query.name}.jpg`);
   },
 });
 
 const upload = multer({
   storage: multerStorage,
 });
+
+//Upload Image
+app.post("/", upload.single("uploaded-file"), (req, res) => {});
 
 app.use("/products", express.static("public"));
 
