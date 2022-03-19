@@ -30,12 +30,29 @@ const addToCart = (req, res) => {
   const USERID = req.body.userId;
   const PRODUCTID = req.body.productId;
   const QTY = req.body.qty;
-  const QUERY = `INSERT INTO db_pharmacy.cart (\`user_id\`, \`product_id\`, \`qty\`) VALUES (${USERID}, ${PRODUCTID}, ${QTY});`;
 
-  console.log(QUERY);
+  //Check existing cart
+  let QUERY = `SELECT * FROM db_pharmacy.cart WHERE user_id = ${USERID} AND product_id = ${PRODUCTID};`;
 
   db.query(QUERY, (err, result) => {
-    res.status(200).send(result);
+    if (!result.length) {
+      //Insert new cart
+      let QUERY = `INSERT INTO db_pharmacy.cart (\`user_id\`, \`product_id\`, \`qty\`) VALUES (${USERID}, ${PRODUCTID}, ${QTY});`;
+      db.query(QUERY, (err, result) => {
+        console.log(QUERY);
+        res.status(200).send(result);
+      });
+    } else {
+      //Add to existing cart
+      const NEW_QTY = result[0].qty + QTY;
+
+      let QUERY = `UPDATE db_pharmacy.cart SET qty = ${NEW_QTY} WHERE user_id = ${USERID} AND product_id = ${PRODUCTID};`;
+
+      db.query(QUERY, (err, result) => {
+        console.log(QUERY);
+        res.status(200).send(result);
+      });
+    }
   });
 };
 
