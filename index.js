@@ -5,7 +5,7 @@ const app = express();
 const db = require("./database");
 require("dotenv").config();
 
-const PORT = process.env.PORT | 0;
+const PORT = process.env.PORT || 2000;
 
 // Function to serve all static files
 // inside public directory.
