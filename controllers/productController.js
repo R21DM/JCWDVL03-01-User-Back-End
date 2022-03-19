@@ -90,6 +90,10 @@ module.exports = {
       scriptQuery = `SELECT * FROM product WHERE id=${ID}`;
       console.log(scriptQuery);
     }
+    if (req.query.sort) {
+      scriptQuery += ` order by price ${req.query.sort}`;
+      console.log(scriptQuery);
+    }
 
     db.query(scriptQuery, (err, results) => {
       if (err) res.status(500).send(err);
