@@ -54,6 +54,17 @@ module.exports = {
       }
     });
   },
+  getAllData: (req, res) => {
+    let queryUsername = `SELECT * FROM user where token_data = ${db.escape(
+      req.query.token
+    )}`;
+
+    db.query(queryUsername, (err, results) => {
+      if (results.length < 1) return res.status(500).send("Can't get data");
+      if (err) return res.status(500).send("Can't get data");
+      console.log(results);
+    });
+  },
 
   getEmail: (req, res) => {
     // Entah kenapa harus pakai DNS
@@ -149,7 +160,7 @@ module.exports = {
         html: `<h2>Hi there ${respond.username}!</h2>
       <p>You have recently visited our website and requested for your password.</p>
       <p>Your username: ${respond.username},</p>
-      <p>Your password: ${respond.password}</p>
+      <p>Please change your password by clicking this <a href=http://localhost:3000/change-password?token=${respond.token_data}>link</a> </p>
       <p>Thank you</p>`, // html body
       };
 
@@ -160,6 +171,23 @@ module.exports = {
           console.log("Email sent");
         }
       });
+      res.status(200).send(results);
+    });
+  },
+  changePass: (req, res) => {
+    const PASSWORD = req.body.password;
+
+    //Hash Password
+    const SALT = bcrypt.genSaltSync(10);
+    const HASH_PASSWORD = bcrypt.hashSync(PASSWORD, SALT);
+
+    let updateQuery = `UPDATE user set password='${HASH_PASSWORD}' where token_data = ${db.escape(
+      req.body.token
+    )};`;
+    console.log(updateQuery);
+
+    db.query(updateQuery, (err, results) => {
+      if (err) res.status(500).send(err);
       res.status(200).send(results);
     });
   },
